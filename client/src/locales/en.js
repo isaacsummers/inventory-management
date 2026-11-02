@@ -6,6 +6,7 @@ export default {
     orders: 'Orders',
     finance: 'Finance',
     demandForecast: 'Demand Forecast',
+    restocking: 'Restocking',
     companyName: 'Catalyst Components',
     subtitle: 'Inventory Management System'
   },
@@ -112,7 +113,13 @@ export default {
     onTimeDelivery: 'On-Time Delivery',
     itemsCount: '{count} items',
     quantity: 'Qty',
+    submittedOrders: 'Submitted Orders',
+    submittedOrdersDescription: 'Restocking orders placed from the Restocking tab',
+    noSubmittedOrders: 'No restocking orders have been submitted yet.',
+    leadTimeDays: '{days} days',
     table: {
+      submittedDate: 'Submitted',
+      leadTime: 'Lead Time',
       orderNumber: 'Order Number',
       orderId: 'Order ID',
       orderDate: 'Order Date',
@@ -188,6 +195,43 @@ export default {
     }
   },
 
+  // Restocking
+  restocking: {
+    title: 'Restocking',
+    description: 'Set a budget and restock the items with the largest forecast shortfall',
+    budget: 'Available Budget',
+    budgetHint: 'Drag to set how much you can spend on this restocking order',
+    budgetMax: 'Full shortfall cost',
+    allocated: 'Allocated',
+    remaining: 'Remaining',
+    itemsRecommended: 'Items Recommended',
+    orderLeadTime: 'Order Lead Time',
+    leadTimeDays: '{days} days',
+    recommendations: 'Recommended Items',
+    recommendationsHint: 'Increasing-demand items are funded first, then the largest shortfalls. The last item may be partly funded.',
+    noShortfall: 'All forecast items are stocked for the forecast period.',
+    noBudget: 'Raise the budget to see recommended items.',
+    partial: 'Partial',
+    placeOrder: 'Place Order',
+    placing: 'Placing order...',
+    orderPlaced: 'Order {number} submitted. Expected delivery in {days} days.',
+    viewInOrders: 'View in Orders',
+    orderFailed: 'Could not place the order',
+    filtersNotApplied: 'Global filters do not apply to restocking.',
+    table: {
+      sku: 'SKU',
+      itemName: 'Item Name',
+      trend: 'Trend',
+      onHand: 'On Hand',
+      forecast: 'Forecast',
+      shortfall: 'Shortfall',
+      orderQty: 'Order Qty',
+      unitCost: 'Unit Cost',
+      lineCost: 'Line Cost',
+      leadTime: 'Lead Time'
+    }
+  },
+
   // Filters
   filters: {
     timePeriod: 'Time Period',
@@ -206,7 +250,8 @@ export default {
     backordered: 'Backordered',
     inStock: 'In Stock',
     lowStock: 'Low Stock',
-    adequate: 'Adequate'
+    adequate: 'Adequate',
+    submitted: 'Submitted'
   },
 
   // Trends

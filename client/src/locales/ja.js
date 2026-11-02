@@ -6,6 +6,7 @@ export default {
     orders: '注文',
     finance: '財務',
     demandForecast: '需要予測',
+    restocking: '補充発注',
     companyName: '触媒コンポーネンツ',
     subtitle: '在庫管理システム'
   },
@@ -112,7 +113,13 @@ export default {
     onTimeDelivery: '定時配達',
     itemsCount: '{count}件',
     quantity: '数量',
+    submittedOrders: '提出済みの発注',
+    submittedOrdersDescription: '補充発注タブから提出された発注',
+    noSubmittedOrders: '提出済みの補充発注はまだありません。',
+    leadTimeDays: '{days}日',
     table: {
+      submittedDate: '提出日',
+      leadTime: 'リードタイム',
       orderNumber: '注文番号',
       orderId: '注文ID',
       orderDate: '注文日',
@@ -188,6 +195,43 @@ export default {
     }
   },
 
+  // Restocking
+  restocking: {
+    title: '補充発注',
+    description: '予算を設定し、予測不足量の大きい品目から補充します',
+    budget: '利用可能な予算',
+    budgetHint: 'スライダーでこの補充発注に使える金額を設定します',
+    budgetMax: '不足分の全額',
+    allocated: '割当額',
+    remaining: '残額',
+    itemsRecommended: '推奨品目数',
+    orderLeadTime: '発注リードタイム',
+    leadTimeDays: '{days}日',
+    recommendations: '推奨品目',
+    recommendationsHint: '需要増加の品目を優先し、次に不足量の大きい順に割り当てます。最後の品目は一部のみの場合があります。',
+    noShortfall: 'すべての予測品目は予測期間分の在庫があります。',
+    noBudget: '予算を上げると推奨品目が表示されます。',
+    partial: '一部',
+    placeOrder: '発注する',
+    placing: '発注中...',
+    orderPlaced: '発注 {number} を提出しました。{days}日後に配達予定です。',
+    viewInOrders: '注文で表示',
+    orderFailed: '発注できませんでした',
+    filtersNotApplied: 'グローバルフィルターは補充発注には適用されません。',
+    table: {
+      sku: 'SKU',
+      itemName: '品目名',
+      trend: 'トレンド',
+      onHand: '在庫数',
+      forecast: '予測',
+      shortfall: '不足量',
+      orderQty: '発注数量',
+      unitCost: '単価',
+      lineCost: '小計',
+      leadTime: 'リードタイム'
+    }
+  },
+
   // Filters
   filters: {
     timePeriod: '期間',
@@ -206,7 +250,8 @@ export default {
     backordered: 'バックオーダー',
     inStock: '在庫あり',
     lowStock: '在庫僅少',
-    adequate: '適量'
+    adequate: '適量',
+    submitted: '提出済み'
   },
 
   // Trends

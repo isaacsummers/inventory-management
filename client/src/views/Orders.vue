@@ -5,6 +5,64 @@
       <p>{{ t('orders.description') }}</p>
     </div>
 
+    <!-- Restocking orders: independent of global filters and of the customer orders request -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title">
+            {{ t('orders.submittedOrders') }}<template v-if="!restockLoading && !restockError"> ({{ restockOrders.length }})</template>
+          </h3>
+          <p class="card-subtitle">{{ t('orders.submittedOrdersDescription') }}</p>
+        </div>
+      </div>
+
+      <div v-if="restockLoading" class="loading">{{ t('common.loading') }}</div>
+      <div v-else-if="restockError" class="error">{{ restockError }}</div>
+      <div v-else-if="restockOrders.length === 0" class="empty-state">{{ t('orders.noSubmittedOrders') }}</div>
+      <div v-else class="table-container">
+        <table class="orders-table restock-table">
+          <thead>
+            <tr>
+              <th class="col-order-number">{{ t('orders.table.orderNumber') }}</th>
+              <th class="col-items">{{ t('orders.table.items') }}</th>
+              <th class="col-date">{{ t('orders.table.submittedDate') }}</th>
+              <th class="col-lead-time">{{ t('orders.table.leadTime') }}</th>
+              <th class="col-date">{{ t('orders.table.expectedDelivery') }}</th>
+              <th class="col-value">{{ t('orders.table.totalValue') }}</th>
+              <th class="col-status">{{ t('orders.table.status') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="order in restockOrders" :key="order.id">
+              <td class="col-order-number"><strong>{{ order.order_number }}</strong></td>
+              <td class="col-items">
+                <details class="items-details">
+                  <summary class="items-summary">
+                    {{ t('orders.itemsCount', { count: order.items.length }) }}
+                  </summary>
+                  <div class="items-dropdown">
+                    <div v-for="item in order.items" :key="item.sku" class="item-entry">
+                      <span class="item-name">{{ translateProductName(item.name) }}</span>
+                      <span class="item-meta">{{ item.sku }} &middot; {{ t('orders.quantity') }}: {{ item.quantity }} @ {{ formatCurrencyWithDecimals(item.unit_price, currentCurrency, 2) }}</span>
+                    </div>
+                  </div>
+                </details>
+              </td>
+              <td class="col-date">{{ formatDate(order.submitted_date) }}</td>
+              <td class="col-lead-time">{{ t('orders.leadTimeDays', { days: order.lead_time_days }) }}</td>
+              <td class="col-date">{{ formatDate(order.expected_delivery) }}</td>
+              <td class="col-value"><strong>{{ formatCurrency(order.total_value, currentCurrency) }}</strong></td>
+              <td class="col-status">
+                <span :class="['badge', getOrderStatusClass(order.status)]">
+                  {{ t(`status.${order.status.toLowerCase()}`) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <div v-if="loading" class="loading">{{ t('common.loading') }}</div>
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else>
@@ -83,6 +141,7 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { api } from '../api'
 import { useFilters } from '../composables/useFilters'
 import { useI18n } from '../composables/useI18n'
+import { formatCurrency, formatCurrencyWithDecimals } from '../utils/currency'
 
 export default {
   name: 'Orders',
@@ -95,6 +154,12 @@ export default {
     const loading = ref(true)
     const error = ref(null)
     const orders = ref([])
+
+    // Submitted restocking orders have their own state so a failure in either request
+    // doesn't hide the other table
+    const restockLoading = ref(true)
+    const restockError = ref(null)
+    const restockOrders = ref([])
 
     // Use shared filters
     const {
@@ -124,6 +189,19 @@ export default {
       }
     }
 
+    // Not filter-dependent: loaded once on mount, never from the filter watcher
+    const loadRestockOrders = async () => {
+      try {
+        restockLoading.value = true
+        restockError.value = null
+        restockOrders.value = await api.getRestockOrders()
+      } catch (err) {
+        restockError.value = 'Failed to load submitted orders: ' + err.message
+      } finally {
+        restockLoading.value = false
+      }
+    }
+
     // Watch for filter changes and reload data
     watch([selectedPeriod, selectedLocation, selectedCategory, selectedStatus], () => {
       loadOrders()
@@ -138,7 +216,8 @@ export default {
         'Delivered': 'success',
         'Shipped': 'info',
         'Processing': 'warning',
-        'Backordered': 'danger'
+        'Backordered': 'danger',
+        'Submitted': 'info'
       }
       return statusMap[status] || 'info'
     }
@@ -153,13 +232,22 @@ export default {
       })
     }
 
-    onMounted(loadOrders)
+    onMounted(() => {
+      loadOrders()
+      loadRestockOrders()
+    })
 
     return {
       t,
       loading,
       error,
       orders,
+      restockLoading,
+      restockError,
+      restockOrders,
+      currentCurrency,
+      formatCurrency,
+      formatCurrencyWithDecimals,
       getOrdersByStatus,
       getOrderStatusClass,
       formatDate,
@@ -201,6 +289,28 @@ export default {
 
 .col-value {
   width: 120px;
+}
+
+.col-lead-time {
+  width: 110px;
+}
+
+/* Submitted orders card */
+.card-subtitle {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.empty-state {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.938rem;
+}
+
+.restock-table {
+  min-width: 860px;
 }
 
 /* Items details styling */
@@ -275,5 +385,15 @@ export default {
 .item-meta {
   font-size: 0.813rem;
   color: #64748b;
+}
+
+/* .table-container is overflow-x: auto, which clips an absolutely positioned dropdown
+   (and the list can be short, so it would add a scrollbar). Expand inline instead. */
+.restock-table .items-dropdown {
+  position: static;
+  min-width: 0;
+  max-width: none;
+  box-shadow: none;
+  padding: 0.5rem;
 }
 </style>

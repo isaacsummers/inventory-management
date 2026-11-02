@@ -22,6 +22,15 @@ def client():
 
 
 @pytest.fixture
+def clean_restock_orders():
+    """Empty the in-memory restock order list before and after a test."""
+    from mock_data import restock_orders
+    restock_orders.clear()
+    yield restock_orders
+    restock_orders.clear()
+
+
+@pytest.fixture
 def sample_inventory_item():
     """Sample inventory item for testing."""
     return {
