@@ -318,9 +318,9 @@ export default {
 
 <style scoped>
 .filters-note {
-  margin-top: 0.5rem;
-  font-size: 0.813rem;
-  color: #64748b;
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
   font-style: italic;
 }
 
@@ -330,30 +330,31 @@ export default {
   justify-content: space-between;
   align-items: baseline;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  margin-bottom: 0.75rem;
+  gap: var(--space-2) var(--space-4);
+  margin-bottom: var(--space-3);
 }
 
 .budget-label {
-  font-size: 0.875rem;
+  font-size: var(--text-xs);
   font-weight: 600;
-  color: #64748b;
+  color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.06em;
 }
 
 .budget-value {
-  font-size: 2.25rem;
+  font-size: var(--text-3xl);
   font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.025em;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 .budget-slider {
   display: block;
   width: 100%;
-  height: 1.5rem;
-  accent-color: #2563eb;
+  height: var(--space-6);
+  accent-color: var(--color-accent);
   cursor: pointer;
 }
 
@@ -365,48 +366,50 @@ export default {
 .budget-scale {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  margin-top: 0.25rem;
-  font-size: 0.813rem;
-  color: #64748b;
+  gap: var(--space-4);
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .budget-hint {
-  margin-top: 0.75rem;
-  font-size: 0.875rem;
-  color: #64748b;
+  margin-top: var(--space-3);
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
 }
 
-/* Order banners */
+/* Order banner. Body text uses the dark ink shade: the plain success color on the soft fill is under 4.5:1. */
 .success-banner {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  background: #d1fae5;
-  border: 1px solid #a7f3d0;
-  color: #065f46;
-  padding: 1rem;
-  border-radius: 8px;
-  margin: 0 0 1rem;
-  font-size: 0.938rem;
+  gap: var(--space-2) var(--space-4);
+  background: var(--color-success-soft);
+  border: 1px solid var(--color-success-border);
+  border-left: 4px solid var(--color-success);
+  color: var(--color-success-ink);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-md);
 }
 
 .banner-link {
-  color: #065f46;
+  color: var(--color-success-ink);
   font-weight: 600;
   text-decoration: underline;
 }
 
 .banner-link:hover {
-  color: #064e3b;
+  text-decoration: none;
 }
 
 /* Recommendations card */
 .rec-header {
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .rec-heading {
@@ -415,43 +418,38 @@ export default {
 }
 
 .card-hint {
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
-  color: #64748b;
+  margin-top: var(--space-1);
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
 }
 
 .place-order-btn {
-  padding: 0.625rem 1.25rem;
-  background: #2563eb;
-  color: white;
+  padding: var(--space-2) var(--space-5);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
   border: none;
-  border-radius: 6px;
-  font-size: 0.938rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-md);
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background-color var(--dur-fast) var(--ease);
 }
 
 .place-order-btn:hover:not(:disabled) {
-  background: #1d4ed8;
-}
-
-.place-order-btn:focus-visible {
-  outline: 2px solid #2563eb;
-  outline-offset: 2px;
+  background: var(--color-accent-hover);
 }
 
 .place-order-btn:disabled {
-  background: #cbd5e1;
-  color: #64748b;
+  background: var(--color-border-strong);
+  color: var(--color-text-muted);
   cursor: not-allowed;
 }
 
 .empty-state {
-  padding: 2rem 1rem;
+  padding: var(--space-8) var(--space-4);
   text-align: center;
-  color: #64748b;
-  font-size: 0.938rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-md);
 }
 
 /* Keep the table scrollable instead of squashed on narrow screens */
@@ -463,11 +461,10 @@ export default {
 .rec-table td.num {
   text-align: right;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .partial-badge {
-  margin-left: 0.5rem;
-  padding: 0.125rem 0.5rem;
-  font-size: 0.688rem;
+  margin-left: var(--space-2);
 }
 </style>

@@ -260,57 +260,44 @@ export default {
 </script>
 
 <style scoped>
-/* Fixed table layout to prevent column shifting */
-.orders-table {
-  table-layout: fixed;
-  width: 100%;
+/*
+  Both order tables share these rules so they look identical. Columns size naturally
+  (no fixed layout or px widths); headers may wrap so long Japanese labels fit.
+*/
+.restock-table {
+  min-width: 860px;
 }
 
-/* Column widths */
-.col-order-number {
-  width: 130px;
+.orders-table th {
+  white-space: normal;
 }
 
-.col-customer {
-  width: 180px;
+/* Keep identifiers, dates and money on one line */
+.orders-table td.col-order-number,
+.orders-table td.col-date,
+.orders-table td.col-value {
+  white-space: nowrap;
 }
 
-.col-items {
-  width: 200px;
-}
-
-.col-status {
-  width: 130px;
-}
-
-.col-date {
-  width: 140px;
-}
-
-.col-value {
-  width: 120px;
-}
-
-.col-lead-time {
-  width: 110px;
+/* Numeric columns */
+.orders-table .col-lead-time,
+.orders-table .col-value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Submitted orders card */
 .card-subtitle {
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
-  color: #64748b;
+  margin-top: var(--space-1);
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
 }
 
 .empty-state {
-  padding: 2rem 1rem;
+  padding: var(--space-8) var(--space-4);
   text-align: center;
-  color: #64748b;
-  font-size: 0.938rem;
-}
-
-.restock-table {
-  min-width: 860px;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
 }
 
 /* Items details styling */
@@ -320,7 +307,7 @@ export default {
 
 .items-summary {
   cursor: pointer;
-  color: #3b82f6;
+  color: var(--color-accent);
   font-weight: 500;
   list-style: none;
   user-select: none;
@@ -334,9 +321,9 @@ export default {
 .items-summary::before {
   content: '▶';
   display: inline-block;
-  margin-right: 0.375rem;
-  font-size: 0.75rem;
-  transition: transform 0.2s;
+  margin-right: var(--space-1);
+  font-size: var(--text-xs);
+  transition: transform var(--dur) var(--ease);
 }
 
 .items-details[open] .items-summary::before {
@@ -344,7 +331,7 @@ export default {
 }
 
 .items-summary:hover {
-  color: #2563eb;
+  color: var(--color-accent-hover);
   text-decoration: underline;
 }
 
@@ -353,12 +340,12 @@ export default {
   position: absolute;
   top: 100%;
   left: 0;
-  margin-top: 0.5rem;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  padding: 0.75rem;
+  margin-top: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-3);
   z-index: 10;
   min-width: 300px;
   max-width: 400px;
@@ -367,9 +354,9 @@ export default {
 .item-entry {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.5rem;
-  border-bottom: 1px solid #f1f5f9;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--color-surface-muted);
 }
 
 .item-entry:last-child {
@@ -377,14 +364,14 @@ export default {
 }
 
 .item-name {
-  font-size: 0.875rem;
+  font-size: var(--text-base);
   font-weight: 500;
-  color: #0f172a;
+  color: var(--color-text);
 }
 
 .item-meta {
-  font-size: 0.813rem;
-  color: #64748b;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
 }
 
 /* .table-container is overflow-x: auto, which clips an absolutely positioned dropdown
@@ -394,6 +381,6 @@ export default {
   min-width: 0;
   max-width: none;
   box-shadow: none;
-  padding: 0.5rem;
+  padding: var(--space-2);
 }
 </style>

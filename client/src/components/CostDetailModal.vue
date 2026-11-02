@@ -152,22 +152,19 @@ const close = () => {
 <style scoped>
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: var(--color-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2000;
-  padding: 1rem;
+  padding: var(--space-4);
 }
 
 .modal-container {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   max-width: 600px;
   width: 100%;
   max-height: 90vh;
@@ -180,137 +177,155 @@ const close = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .modal-title {
-  font-size: 1.25rem;
+  margin: 0;
+  font-size: var(--text-xl);
   font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.025em;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
 }
 
 .close-button {
   background: none;
   border: none;
-  color: #64748b;
+  color: var(--color-text-muted);
   cursor: pointer;
-  padding: 0.5rem;
+  padding: var(--space-2);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  transition: all 0.15s ease;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
 }
 
 .close-button:hover {
-  background: #f1f5f9;
-  color: #0f172a;
+  background: var(--color-surface-muted);
+  color: var(--color-text);
 }
 
 .modal-body {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  padding: 2rem;
+  padding: var(--space-8);
+}
+
+.modal-footer {
+  padding: var(--space-6);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.btn-secondary {
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: var(--text-base);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.btn-secondary:hover {
+  background: var(--color-surface-muted);
 }
 
 .cost-summary {
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-8);
 }
 
 .summary-card {
-  padding: 1.5rem;
-  border-radius: 10px;
+  padding: var(--space-6);
+  border-radius: var(--radius-md);
   text-align: center;
 }
 
 .summary-card.total {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
 }
 
 .summary-label {
-  font-size: 0.875rem;
+  font-size: var(--text-base);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   opacity: 0.9;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-2);
 }
 
 .summary-value {
-  font-size: 2.25rem;
+  font-size: var(--text-3xl);
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 .cost-breakdown {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
+/* Category colors (domain): each item sets its own --cost-color, --cost-tint and --cost-border */
 .cost-item {
-  padding: 1.25rem;
-  border-radius: 10px;
-  border: 2px solid;
+  padding: var(--space-5);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--cost-border);
+  background: var(--cost-tint);
 }
 
 .cost-item.procurement {
-  border-color: #93c5fd;
-  background: #eff6ff;
+  --cost-color: #3b82f6;
+  --cost-tint: #eff6ff;
+  --cost-border: #93c5fd;
 }
 
 .cost-item.operational {
-  border-color: #c4b5fd;
-  background: #f5f3ff;
+  --cost-color: #8b5cf6;
+  --cost-tint: #f5f3ff;
+  --cost-border: #c4b5fd;
 }
 
 .cost-item.labor {
-  border-color: #86efac;
-  background: #f0fdf4;
+  --cost-color: #10b981;
+  --cost-tint: #f0fdf4;
+  --cost-border: #86efac;
 }
 
 .cost-item.overhead {
-  border-color: #fcd34d;
-  background: #fffbeb;
+  --cost-color: #f59e0b;
+  --cost-tint: #fffbeb;
+  --cost-border: #fcd34d;
 }
 
 .cost-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
+  gap: var(--space-4);
+  margin-bottom: var(--space-2);
 }
 
 .cost-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
+  width: var(--space-12);
+  height: var(--space-12);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-}
-
-.cost-item.procurement .cost-icon {
-  background: #3b82f6;
-  color: white;
-}
-
-.cost-item.operational .cost-icon {
-  background: #8b5cf6;
-  color: white;
-}
-
-.cost-item.labor .cost-icon {
-  background: #10b981;
-  color: white;
-}
-
-.cost-item.overhead .cost-icon {
-  background: #f59e0b;
-  color: white;
+  background: var(--cost-color);
+  color: var(--color-accent-contrast);
 }
 
 .cost-info {
@@ -319,52 +334,28 @@ const close = () => {
 
 .cost-name {
   font-weight: 600;
-  color: #0f172a;
-  font-size: 1rem;
-  margin-bottom: 0.25rem;
+  color: var(--color-text);
+  font-size: var(--text-md);
+  margin-bottom: var(--space-1);
 }
 
 .cost-amount {
-  font-size: 1.5rem;
+  font-size: var(--text-2xl);
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
 }
 
 .cost-percentage {
-  font-size: 0.875rem;
-  color: #64748b;
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
   font-weight: 500;
-}
-
-.modal-footer {
-  padding: 1.5rem;
-  border-top: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.btn-secondary {
-  padding: 0.625rem 1.25rem;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 0.875rem;
-  color: #334155;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  font-family: inherit;
-}
-
-.btn-secondary:hover {
-  background: #e2e8f0;
-  border-color: #cbd5e1;
 }
 
 /* Modal transition animations */
 .modal-enter-active,
 .modal-leave-active {
-  transition: opacity 0.2s ease;
+  transition: opacity var(--dur) var(--ease);
 }
 
 .modal-enter-from,
@@ -374,7 +365,7 @@ const close = () => {
 
 .modal-enter-active .modal-container,
 .modal-leave-active .modal-container {
-  transition: transform 0.2s ease;
+  transition: transform var(--dur) var(--ease);
 }
 
 .modal-enter-from .modal-container,
