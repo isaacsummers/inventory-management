@@ -38,5 +38,8 @@ purchase_orders = load_json_file('purchase_orders.json')
 # Submitted restocking orders (runtime state only, resets when the server restarts)
 restock_orders = []
 
+# User-created tasks (runtime state only, resets when the server restarts)
+tasks = []
+
 # All data is now loaded from JSON files in the data/ directory
 # This allows for easier maintenance and updates of the sample data

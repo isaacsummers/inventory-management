@@ -1,9 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime, timedelta
-from typing import List, Optional
+from typing import List, Literal, Optional
 from pydantic import BaseModel, Field
-from mock_data import inventory_items, orders, demand_forecasts, backlog_items, spending_summary, monthly_spending, category_spending, recent_transactions, purchase_orders, restock_orders
+from mock_data import inventory_items, orders, demand_forecasts, backlog_items, spending_summary, monthly_spending, category_spending, recent_transactions, purchase_orders, restock_orders, tasks
 
 app = FastAPI(title="Factory Inventory Management System")
 
@@ -131,6 +131,18 @@ class RestockLineRequest(BaseModel):
 class CreateRestockOrderRequest(BaseModel):
     items: List[RestockLineRequest]
     budget: float = Field(ge=0)
+
+class CreateTaskRequest(BaseModel):
+    title: str = Field(min_length=1)
+    priority: Literal["low", "medium", "high"] = "medium"
+    dueDate: str
+
+class Task(BaseModel):
+    id: str
+    title: str
+    priority: Literal["low", "medium", "high"]
+    dueDate: str
+    status: Literal["pending", "completed"]
 
 class RestockLineItem(BaseModel):
     sku: str
@@ -264,6 +276,52 @@ def create_restock_order(request: CreateRestockOrderRequest):
     }
     restock_orders.append(order)
     return order
+
+@app.get("/api/tasks", response_model=List[Task])
+def get_tasks():
+    """Get user-created tasks, newest first"""
+    return list(reversed(tasks))
+
+@app.post("/api/tasks", response_model=Task, status_code=201)
+def create_task(request: CreateTaskRequest):
+    """Create a task. Ids are strings so they never collide with the built-in numeric tasks."""
+    title = request.title.strip()
+    if not title:
+        raise HTTPException(status_code=400, detail="Task title must not be blank")
+    try:
+        datetime.strptime(request.dueDate, "%Y-%m-%d")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="dueDate must be in YYYY-MM-DD format")
+
+    # Max existing sequence + 1 so ids are never reused after a delete
+    seq = max((int(t["id"].split("-")[1]) for t in tasks), default=0) + 1
+    task = {
+        "id": f"task-{seq}",
+        "title": title,
+        "priority": request.priority,
+        "dueDate": request.dueDate,
+        "status": "pending",
+    }
+    tasks.append(task)
+    return task
+
+@app.patch("/api/tasks/{task_id}", response_model=Task)
+def toggle_task(task_id: str):
+    """Toggle a task between pending and completed"""
+    task = next((t for t in tasks if t["id"] == task_id), None)
+    if not task:
+        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+    task["status"] = "completed" if task["status"] == "pending" else "pending"
+    return task
+
+@app.delete("/api/tasks/{task_id}")
+def delete_task(task_id: str):
+    """Delete a task"""
+    task = next((t for t in tasks if t["id"] == task_id), None)
+    if not task:
+        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+    tasks.remove(task)
+    return {"message": f"Task {task_id} deleted"}
 
 @app.get("/api/dashboard/summary")
 def get_dashboard_summary(

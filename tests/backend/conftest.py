@@ -31,6 +31,15 @@ def clean_restock_orders():
 
 
 @pytest.fixture
+def clean_tasks():
+    """Empty the in-memory task list before and after a test."""
+    from mock_data import tasks
+    tasks.clear()
+    yield tasks
+    tasks.clear()
+
+
+@pytest.fixture
 def sample_inventory_item():
     """Sample inventory item for testing."""
     return {
